@@ -12,8 +12,8 @@ Files needing to be changed;
 Files needing to be added;
 
 - A Podfile
-- A header file
-- A class file
+- A header `.h` file
+- A class `.m` file
 
 ### Android
 
