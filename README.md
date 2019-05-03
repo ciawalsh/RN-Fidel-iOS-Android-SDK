@@ -1,2 +1,2 @@
-# RN-Fidel-iOS-SDK
-A bridge between React Native and the Fidel SDK
+# RN-Fidel-iOS/Android-SDK
+A bridge between React Native and Fidel's Android & iOS SDK's
