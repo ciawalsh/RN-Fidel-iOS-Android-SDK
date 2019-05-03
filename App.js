@@ -6,26 +6,20 @@
  * @flow
  */
 
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {Platform, NativeModules, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
-
-const CalanderManager = NativeModules.CalanderManager
+const FideliOS = NativeModules.CalanderManager
+const FidelAndroid = NativeModules.Fidel
 
 type Props = {};
-export default class App extends Component<Props> {
+export default class App extends PureComponent<Props> {
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>Welcome to React Native!</Text>
         <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <TouchableOpacity onPress={this.presentFidel}>
+        <TouchableOpacity onPress={this.checkPlatform}>
           <Text>Touch Me</Text>
         </TouchableOpacity>
       </View>
@@ -33,19 +27,38 @@ export default class App extends Component<Props> {
   }
 
   setMetaData = (userEmail) => {
-    CalanderManager.setMetaData(userEmail);
+    if (Platform.OS === "ios") {
+      FideliOS.setMetaData(userEmail);
+    } else {
+      FidelAndroid.setMetaData(userEmail)
+    }
   }
 
-  presentFidel = async () => {
+  checkPlatform = () => {
+    if (Platform.OS === "ios") {
+      this.presentFidelIOS()
+    } else {
+      this.presentFidelAndroid()
+    }
+  }
+
+  presentFidelIOS = async () => {
     try {
       this.setMetaData("a@b.c");
-      var present = await CalanderManager.present();
+      var present = await FideliOS.present();
       console.log("success: ", present);
       return present;
     }
     catch (e) {
       console.log("error: ", e)
     }
+  }
+
+  presentFidelAndroid = () => {
+    this.setMetaData("a@b.c")
+    FidelAndroid.present().then((result) => {
+      console.log("Resolved/Rejected Promise result: ", result)
+    })
   }
 }
 
